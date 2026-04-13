@@ -1,7 +1,7 @@
 import os
 import streamlit as st
 from supabase import create_client, Client
-
+#from dotenv import load_dotenv
 # --- Detect if running on Streamlit Cloud ---
 ON_STREAMLIT = st.runtime.exists()
 
@@ -17,10 +17,10 @@ else:
     SUPABASE_URL = os.getenv("SUPABASE_URL")
     SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
-# Create Supabase client
+
+
+# --- Create Supabase client ---
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
-
-
 # ------------------------------
 # Helper: Get profile by user ID
 # ------------------------------
