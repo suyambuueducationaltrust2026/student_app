@@ -36,6 +36,7 @@ if profile["role_code"] in [2, 3]:
     # ----------------------
     # Admission Section
     # ----------------------
+    st.divider()
     st.subheader("📅 Admission Details")
 
     col1, col2, col3 = st.columns(3)
@@ -78,6 +79,7 @@ if profile["role_code"] in [2, 3]:
     # ----------------------
     # Course Section
     # ----------------------
+    st.divider()
     st.subheader("🎓 Course Selection")
     courcol1, courcol2 = st.columns(2)
 
@@ -112,14 +114,15 @@ if profile["role_code"] in [2, 3]:
     # ----------------------
     # FORM
     # ----------------------
+    st.divider()
     st.subheader("📝 Student Details")
 
     with st.form("student_form"):
 
-        col1, col2 = st.columns(2)
+        formcol1, formcol2 = st.columns(2)
 
         # Personal
-        with col1:
+        with formcol1:
             name = st.text_input("Student Name")
             parentname = st.text_input("Parent/Guardian Name")
             aadhaar = st.text_input("Aadhaar Number", max_chars=12)
@@ -128,8 +131,8 @@ if profile["role_code"] in [2, 3]:
             location_type = st.selectbox("Location Type", ["Rural","Urban"])
             address = st.text_area("Address")
             abc_id = st.text_input("ABC ID")
-
-        with col2:
+            mother_tongue = st.text_input("Mother Tongue")
+        with formcol2:
             gender = st.selectbox("Gender", ["Male","Female","Other"])
             Dob = st.date_input("Date of Birth", value=date(1985,1,1))
             religion = st.selectbox("Religion",["HINDU","CHRISTIAN","ISLAM","Other"])
@@ -139,15 +142,27 @@ if profile["role_code"] in [2, 3]:
             workstatus = st.selectbox("Working Status",["Not Working","Govt Job","Private Job"])
             Maritalstatus = st.selectbox("Marital Status",["Not Married","Married"])
             deb_id = st.text_input("DEB ID")
-
+            differently_abled = st.selectbox("Differently Abled/Disability",["NO","YES"])
         # Academic
-        col3, col4 = st.columns(2)
-        with col3:
+        st.divider()
+        qualicol3, qualicol4 = st.columns(2)
+        with qualicol3:
             qualifying_exam1 = st.text_input("Qualifying Exam")
             qualicertno1 = st.text_input("Certificate No")
-        with col4:
+            
+        with qualicol4:
             qualipass_year1 = st.date_input("Year of Passing", value=date(2020,1,1),min_value=date(1985,1,1),max_value=date.today())
             applndate = st.date_input("Date of Application", value=date.today())
+
+        st.divider()
+        refcol1,refcol2,refcol3 = st.columns(3)
+        with refcol1:
+            reference_type = st.selectbox("Student Reference Type",["CENTRE","SELF","OTHER"])
+        with refcol2:
+            reference_name = st.text_input("Reference Person Name/Centre Name")
+        with refcol3:
+            reference_mobile = st.text_input("Reference Centre/Person Mobile Number", max_chars=10)
+
 
         submitted = st.form_submit_button("Submit")
 
@@ -244,7 +259,14 @@ if profile["role_code"] in [2, 3]:
                 "application_no": None,
                 "app_status": "pending",
                 "appln_date": applndate.isoformat(),
-                "entry_date": datetime.now().isoformat()
+                "entry_date": datetime.now().isoformat(),
+                "differently_abled": differently_abled,
+                "mother_tongue": mother_tongue,
+                "reference_type":reference_type,
+                "reference_centre":reference_name,
+                "ref_centre_mobile":reference_mobile
+
+
             }
 
             try:
