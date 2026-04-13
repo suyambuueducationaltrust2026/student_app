@@ -11,11 +11,11 @@ if ON_STREAMLIT:
     SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
 else:
     # Use .env locally
-    from dotenv import load_dotenv
+    #from dotenv import load_dotenv
 
-    load_dotenv()  # reads .env in project root
-    SUPABASE_URL = os.getenv("SUPABASE_URL")
-    SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+    #load_dotenv()  # reads .env in project root
+    #SUPABASE_URL = os.getenv("SUPABASE_URL")
+    #SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 
 
