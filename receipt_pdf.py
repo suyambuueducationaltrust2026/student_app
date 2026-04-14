@@ -12,7 +12,7 @@ def generate_receipt_pdf(receipt, student, fees):
 
     # HEADER
     p.setFont("Helvetica-Bold", 32)
-    p.drawString(75,y,"Suyambuu Learning Centre")
+    p.drawString(75, y,"Suyambuu Learning Centre")
     y-=40
     p.setFont("Helvetica-Bold", 16)
     p.drawString(200, y, "FEE RECEIPT")
