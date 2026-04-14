@@ -3,19 +3,19 @@ import streamlit as st
 from supabase import create_client, Client
 #from dotenv import load_dotenv
 # --- Detect if running on Streamlit Cloud ---
-ON_STREAMLIT = st.runtime.exists()
+#sON_STREAMLIT = st.runtime.exists()
 
-if ON_STREAMLIT:
+#sif ON_STREAMLIT:
     # Use Streamlit secrets on the cloud
-    SUPABASE_URL = st.secrets["SUPABASE_URL"]
-    SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
-else:
+  #s  SUPABASE_URL = st.secrets["SUPABASE_URL"]
+  #s  SUPABASE_KEY = st.secrets["SUPABASE_KEY"]
+#selse:
     # Use .env locally
-    from dotenv import load_dotenv
+from dotenv import load_dotenv
 
-    load_dotenv()  # reads .env in project root
-    SUPABASE_URL = os.getenv("SUPABASE_URL")
-    SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+load_dotenv()  # reads .env in project root
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 
 
