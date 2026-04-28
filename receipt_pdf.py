@@ -15,26 +15,25 @@ def generate_receipt_pdf(receipt, student, fees):
     p.drawString(75, y,"Suyambuu Learning Centre")
     y-=40
     p.setFont("Helvetica-Bold", 16)
-    p.drawString(200, y, "FEE RECEIPT")
+    p.drawString(250, y, "FEE RECEIPT")
     y -= 40
 
     # STUDENT INFO
     p.setFont("Helvetica", 11)
     p.drawString(50, y, f"Name: {student['name']}")
+    p.drawString(400, y, f"Receipt No: {receipt['receipt_no']}")
+    
     y -= 20
+
     p.drawString(50, y, f"Course: {student['course_name']}")
+    p.drawString(400, y, f"Payment Date: {receipt['payment_date']}")
     y -= 20
     p.drawString(50, y, f"Year: {student['year']}")
+    p.drawString(400, y, f"Mode: {receipt['payment_mode']}")
     y -= 30
 
     # RECEIPT INFO
-    p.drawString(50, y, f"Receipt No: {receipt['receipt_no']}")
-    y -= 20
-    p.drawString(50, y, f"Payment Date: {receipt['payment_date']}")
-    y -= 20
-    p.drawString(50, y, f"Mode: {receipt['payment_mode']}")
-    y -= 30
-
+    
     # TABLE HEADER
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, "Fee Type")
@@ -58,7 +57,12 @@ def generate_receipt_pdf(receipt, student, fees):
     y -= 20
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, f"Total Paid: ₹ {receipt['total_amount']}")
-
+    y-=40
+    p.setFont("Helvetica-Bold", 12)
+    p.drawString(375, y,"For Suyambuu Learning Centre")
+    y-=40
+    p.drawString(400, y,"Authorized Signatory")
+    y-=50
     p.showPage()
     p.save()
 

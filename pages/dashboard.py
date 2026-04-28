@@ -25,3 +25,15 @@ if profile["role_code"] in [1,2,3]:
 
 # Display in Streamlit
     st.dataframe(df1)    
+#FEES DASHBOARD
+if profile["role_code"] in [1,2]:
+
+    st.title("👤 Student FEES Dashboard")
+
+    response1 = supabase.table("full_fee_payment_view").select("*").execute()
+
+# Convert to DataFrame
+    df1 = pd.DataFrame(response1.data)
+
+# Display in Streamlit
+    st.dataframe(df1)    

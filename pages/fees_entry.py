@@ -5,15 +5,16 @@ from utils import supabase
 # ======================
 # SESSION INIT
 # ======================
-if "profile" not in st.session_state:
-    st.error("Session expired")
+if "profile" not in st.session_state or st.session_state.profile is None:
+    st.warning("Please log in first.")
     st.stop()
 
 profile = st.session_state.profile
 
-if profile["role_code"] != 2:
+if "role_code" not in profile or profile["role_code"] != 2:
+    st.warning("Unauthorized access")
     st.stop()
-
+    
 # Page state
 if "page" not in st.session_state:
     st.session_state.page = "search"
