@@ -83,9 +83,13 @@ st.subheader("🧾 Receipt Preview")
 st.markdown(f"""
 ### 🎓 Student Details
 **Name:** {student['name']}  
-**Mobile:** {student['mobile']}  
-**Course:** {student['course_name']}  
+**Registration Number:** {student['registration_no']}
+**University Name:** {student['univ_name']}  
+**Pattern:** {student['pattern_name']}
+**program Name:** {student['program_name']} 
+**Course:** {student['course_name']}
 **Batch:** {student['year']}  
+**Mobile:** {student['mobile']}  
 
 ---
 
