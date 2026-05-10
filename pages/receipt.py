@@ -88,6 +88,7 @@ st.markdown(f"""
 **Pattern:** {student['pattern']}
 **program Name:** {student['program_name']} 
 **Course:** {student['course_name']}
+**Course Year:** {receipt['yearfees_master']['course_year']}
 **Batch:** {student['year']}  
 **Mobile:** {student['mobile']}  
  

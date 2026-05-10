@@ -8,17 +8,17 @@ def generate_receipt_pdf(receipt, student, fees):
     p = canvas.Canvas(buffer, pagesize=A4)
 
     width, height = A4
-    y = height - 50
+    y = height - 40
 
     # HEADER
     p.setFont("Helvetica-Bold", 28)
     p.drawString(75, y,"SUYAMBUU EDUCATIONAL TRUST")
-    y-=5
-    p.setFont("Helvetica", 10)
+    y-=20
+    p.setFont("Helvetica", 12)
     p.drawString(50, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
-    y-=5
+    y-=15
     p.drawString(50,y,"Walajapet-632513. Ranipet District, Tamil Nadu.")
-    y-=5
+    y-=15
     p.drawString(50,y,"Cell: 9944135587 / 8248612310, E-mail: ppk.sset@gmail.com")
     y-=30
     p.setFont("Helvetica-Bold", 16)
@@ -43,8 +43,9 @@ def generate_receipt_pdf(receipt, student, fees):
     y -= 20
     p.drawString(50, y, f"Year: {student['year']}")
     p.drawString(400, y, f"Mode: {receipt['payment_mode']}")
+    y -= 20
+    p.drawString(50, y, f"Course Year: {receipt['yearfees_master']['course_year']}")
     y -= 30
-
     # RECEIPT INFO
     
     # TABLE HEADER
