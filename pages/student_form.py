@@ -108,7 +108,7 @@ if profile["role_code"] in [2, 3]:
 
     with courcol2:
         medium = st.selectbox("Medium of study", ["OTHER", "TAMIL", "ENGLISH"])
-        courseduration = st.selectbox("Course Duration", ["1", "2", "3", "4"])
+        courseduration = st.selectbox("Course Duration", ["1", "2", "3", "4", "5", "6", "7", "8"])
         part1lang = st.selectbox("PART1 Subject", ["HINDI","TAMIL","ENGLISH","ARABIC","URUDHU","MALAYALAM"])
 
     # ----------------------
