@@ -11,12 +11,18 @@ def generate_receipt_pdf(receipt, student, fees):
     y = height - 50
 
     # HEADER
-    p.setFont("Helvetica-Bold", 32)
-    p.drawString(75, y,"Suyambuu Learning Centre")
-    y-=40
+    p.setFont("Helvetica-Bold", 28)
+    p.drawString(75, y,"SUYAMBUU EDUCATIONAL TRUST")
+    Y-=5
+    p.drawString(50, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
+    y-=5
+    p.drawString(50,y,"Walajapet-632513. Ranipet District, Tamil Nadu.")
+    y-=5
+    p.drawString(50,y,"Cell: 9944135587 / 8248612310, E-mail: ppk.sset@gmail.com")
+    y-=30
     p.setFont("Helvetica-Bold", 16)
     p.drawString(250, y, "FEE RECEIPT")
-    y -= 40
+    y -= 30
 
     # STUDENT INFO
     p.setFont("Helvetica", 11)
@@ -24,9 +30,15 @@ def generate_receipt_pdf(receipt, student, fees):
     p.drawString(400, y, f"Receipt No: {receipt['receipt_no']}")
     
     y -= 20
-
-    p.drawString(50, y, f"Course: {student['course_name']}")
+    
+    p.drawString(50, y, f"Registration Number: {student['registration_no']}")
+    p.drawString(400, y, f"Mobile No: {receipt['mobile']}")
+    y -= 20
+    p.drawString(50, y, f"University Name: {student['university_name']}")
     p.drawString(400, y, f"Payment Date: {receipt['payment_date']}")
+    y -= 20
+    p.drawString(50, y, f"Course: {student['course_name']}")
+    p.drawString(400, y, f"Course Pattern: {student['pattern']}")
     y -= 20
     p.drawString(50, y, f"Year: {student['year']}")
     p.drawString(400, y, f"Mode: {receipt['payment_mode']}")
