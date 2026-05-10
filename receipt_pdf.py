@@ -33,7 +33,7 @@ def generate_receipt_pdf(receipt, student, fees):
     y -= 20
     
     p.drawString(50, y, f"Registration Number: {student['registration_no']}")
-    p.drawString(400, y, f"Mobile No: {receipt['mobile']}")
+    p.drawString(400, y, f"Mobile No: {student['mobile']}")
     y -= 20
     p.drawString(50, y, f"University Name: {student['university_name']}")
     p.drawString(400, y, f"Payment Date: {receipt['payment_date']}")
