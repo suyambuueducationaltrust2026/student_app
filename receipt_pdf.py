@@ -12,7 +12,7 @@ def generate_receipt_pdf(receipt, student, fees):
 
     # HEADER
     p.setFont("Helvetica-Bold", 22)
-    p.drawString(85, y,"SUYAMBUU EDUCATIONAL TRUST")
+    p.drawString(120, y,"SUYAMBUU EDUCATIONAL TRUST")
     y-=20
     p.setFont("Helvetica", 9)
     p.drawString(160, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
@@ -30,25 +30,25 @@ def generate_receipt_pdf(receipt, student, fees):
     p.drawString(50, y, f"Student Name: {student['name']}")
     p.drawString(400, y, f"Receipt No: {receipt['receipt_no']}")
     
-    y -= 20
+    y -= 15
     
     p.drawString(50, y, f"Registration Number: {student['registration_no']}")
     p.drawString(400, y, f"Mobile No: {student['mobile']}")
-    y -= 20
+    y -= 15
     p.drawString(50, y, f"University Name: {student['university_name']}")
     p.drawString(400, y, f"Payment Date: {receipt['payment_date']}")
-    y -= 20
+    y -= 15
     p.drawString(50, y, f"Course: {student['course_name']}")
     p.drawString(400, y, f"Pattern: {student['pattern']}")
-    y -= 20
+    y -= 15
     p.drawString(50, y, f"Admission Year: {student['year']}")
     p.drawString(400, y, f"Mode of Payment: {receipt['payment_mode']}")
-    y -= 20
+    y -= 15
     p.drawString(50, y, f"Admission Type: {student['admission_type']}")
     p.drawString(400, y, f"Year/Sem: {receipt['yearfees_master']['course_year']}")
-    y -= 20
+    y -= 15
     p.drawString(50, y, f"Program Name: {student['program_name']}")
-    y -= 30
+    y -= 20
     # RECEIPT INFO
     
     # TABLE HEADER
@@ -75,7 +75,7 @@ def generate_receipt_pdf(receipt, student, fees):
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, f"Total Paid: ₹ {receipt['total_amount']}")
     y -= 30
-    p.drawString(50, y, f"Remarks: ₹ {receipt['remarks']}")
+    p.drawString(50, y, f"Remarks: {receipt['remarks']}")
     y-=40
     p.setFont("Helvetica-Bold", 12)
     p.drawString(375, y,"For Suyambuu Learning Centre")
