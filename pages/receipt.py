@@ -27,7 +27,7 @@ query = supabase.table("payment_session") \
         manual_bill_no, remarks,
         yearfees_master(
             course_year,
-            student_data(name, mobile, univ_name,admission_type,pattern,program_name,course_name, year,registration_no)
+            student_data(name, mobile, university_name,admission_type,pattern,program_name,course_name, year,registration_no)
         )
     """)
 if search:
@@ -84,7 +84,7 @@ st.markdown(f"""
 ### 🎓 Student Details
 **Name:** {student['name']}  
 **Registration Number:** {student['registration_no']}
-**University Name:** {student['univ_name']}  
+**University Name:** {student['univerrsity_name']}  
 **Pattern:** {student['pattern']}
 **program Name:** {student['program_name']} 
 **Course:** {student['course_name']}
