@@ -13,7 +13,8 @@ def generate_receipt_pdf(receipt, student, fees):
     # HEADER
     p.setFont("Helvetica-Bold", 28)
     p.drawString(75, y,"SUYAMBUU EDUCATIONAL TRUST")
-    Y-=5
+    y-=5
+    p.setFont("Helvetica", 10)
     p.drawString(50, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
     y-=5
     p.drawString(50,y,"Walajapet-632513. Ranipet District, Tamil Nadu.")
