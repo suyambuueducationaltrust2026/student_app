@@ -11,23 +11,23 @@ def generate_receipt_pdf(receipt, student, fees):
     y = height - 40
 
     # HEADER
-    p.setFont("Helvetica-Bold", 24)
-    p.drawString(75, y,"SUYAMBUU EDUCATIONAL TRUST")
+    p.setFont("Helvetica-Bold", 22)
+    p.drawString(85, y,"SUYAMBUU EDUCATIONAL TRUST")
     y-=20
     p.setFont("Helvetica", 9)
-    p.drawString(100, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
-    y-=15
-    p.drawString(150,y,"Walajapet-632513. Ranipet District, Tamil Nadu.")
-    y-=15
+    p.drawString(160, y, "No:1/160, Vallalar Street, Thirumalai Nagar,Anandalai Village & Post,")
+    y-=10
+    p.drawString(210,y,"Walajapet-632513. Ranipet District, Tamil Nadu.")
+    y-=10
     p.drawString(180,y,"Cell: 9944135587 / 8248612310, E-mail: ppk.sset@gmail.com")
-    y-=30
+    y-=20
     p.setFont("Helvetica-Bold", 16)
     p.drawString(250, y, "FEE RECEIPT")
     y -= 30
 
     # STUDENT INFO
     p.setFont("Helvetica", 11)
-    p.drawString(50, y, f"Name: {student['name']}")
+    p.drawString(50, y, f"Student Name: {student['name']}")
     p.drawString(400, y, f"Receipt No: {receipt['receipt_no']}")
     
     y -= 20
@@ -39,15 +39,15 @@ def generate_receipt_pdf(receipt, student, fees):
     p.drawString(400, y, f"Payment Date: {receipt['payment_date']}")
     y -= 20
     p.drawString(50, y, f"Course: {student['course_name']}")
-    p.drawString(400, y, f"Course Pattern: {student['pattern']}")
+    p.drawString(400, y, f"Pattern: {student['pattern']}")
     y -= 20
-    p.drawString(50, y, f"Year: {student['year']}")
-    p.drawString(400, y, f"Mode: {receipt['payment_mode']}")
+    p.drawString(50, y, f"Admission Year: {student['year']}")
+    p.drawString(400, y, f"Mode of Payment: {receipt['payment_mode']}")
     y -= 20
-    p.drawString(50, y, f"Course: {student['admission_type']}")
-    p.drawString(400, y, f"Course Year: {receipt['yearfees_master']['course_year']}")
+    p.drawString(50, y, f"Admission Type: {student['admission_type']}")
+    p.drawString(400, y, f"Year/Sem: {receipt['yearfees_master']['course_year']}")
     y -= 20
-    p.drawString(50, y, f"Course: {student['program_name']}")
+    p.drawString(50, y, f"Program Name: {student['program_name']}")
     y -= 30
     # RECEIPT INFO
     
@@ -74,6 +74,8 @@ def generate_receipt_pdf(receipt, student, fees):
     y -= 20
     p.setFont("Helvetica-Bold", 12)
     p.drawString(50, y, f"Total Paid: ₹ {receipt['total_amount']}")
+    y -= 30
+    p.drawString(50, y, f"Remarks: ₹ {receipt['remarks']}")
     y-=40
     p.setFont("Helvetica-Bold", 12)
     p.drawString(375, y,"For Suyambuu Learning Centre")

@@ -85,7 +85,7 @@ st.markdown(f"""
 **Name:** {student['name']}  
 **Registration Number:** {student['registration_no']}
 **University Name:** {student['university_name']} 
-*Admission type:** {student['admission_type']}  
+**Admission type:** {student['admission_type']}  
 **Pattern:** {student['pattern']}
 **program Name:** {student['program_name']} 
 **Course:** {student['course_name']}
