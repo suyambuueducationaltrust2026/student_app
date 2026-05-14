@@ -21,35 +21,38 @@ st.title("🧾 Receipts")
 # ======================
 search = st.text_input("Search (Name / Mobile / Receipt No)")
 
-query = supabase.table("payment_session") \
-    .select("""
-        id, receipt_no, payment_date, total_amount, payment_mode,
-        manual_bill_no,reference_number, remarks,
-        yearfees_master(
-            course_year,
-            student_data(name, mobile, university_name,admission_type,pattern,program_name,course_name, year,registration_no)
-        )
-    """)
-if search:
-    search_pattern = f"*{search}*"
-
-    # Single string with comma-separated conditions, no extra parentheses
-    or_filter = (
-        f"receipt_no.ilike.{search_pattern},"
-        f"yearfees_master.student_data.name.ilike.{search_pattern},"
-        f"yearfees_master.student_data.mobile.ilike.{search_pattern},"
-        f"yearfees_master.student_data.course_name.ilike.{search_pattern}"
+query = supabase.table("payment_session").select("""
+    id, receipt_no, payment_date, total_amount, payment_mode,
+    manual_bill_no, reference_number, remarks,
+    yearfees_master(
+        course_year,
+        student_data(name, mobile, university_name, admission_type, pattern, program_name, course_name, year, registration_no)
     )
+""").order("id", desc=True).limit(50)
 
-    query = query.or_(or_filter)  # postgrest-py will handle the parentheses internally
+res = query.execute()
+data = res.data or []
 
-res = query.order("id", desc=True).limit(50).execute()
-data = res.data
+# ======================
+# PYTHON-SIDE FILTERING
+# ======================
+if search:
+    search_lower = search.lower()
+    filtered = []
+    for r in data:
+        student = r["yearfees_master"]["student_data"]
+        if (
+            search_lower in str(r.get("receipt_no", "")).lower()
+            or search_lower in student.get("name", "").lower()
+            or search_lower in student.get("mobile", "").lower()
+            or search_lower in student.get("course_name", "").lower()
+        ):
+            filtered.append(r)
+    data = filtered
 
 if not data:
     st.info("No receipts found")
     st.stop()
-
 # ======================
 # RECEIPT LIST
 # ======================
