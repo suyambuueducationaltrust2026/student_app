@@ -31,7 +31,7 @@ query = supabase.table("payment_session") \
         )
     """)
 if search:
-    search_pattern = f"%{search}%"
+    search_pattern = f"*{search}*"
 
     query = query.or_(
         f"receipt_no.ilike.{search_pattern},"
