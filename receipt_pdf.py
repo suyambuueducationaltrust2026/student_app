@@ -48,6 +48,7 @@ def generate_receipt_pdf(receipt, student, fees):
     p.drawString(400, y, f"Year/Sem: {receipt['yearfees_master']['course_year']}")
     y -= 15
     p.drawString(50, y, f"Program Name: {student['program_name']}")
+    p.drawString(400, y, f"Reference No: {receipt['reference_number']}")
     y -= 20
     # RECEIPT INFO
     

@@ -24,7 +24,7 @@ search = st.text_input("Search (Name / Mobile / Receipt No)")
 query = supabase.table("payment_session") \
     .select("""
         id, receipt_no, payment_date, total_amount, payment_mode,
-        manual_bill_no, remarks,
+        manual_bill_no,reference_number, remarks,
         yearfees_master(
             course_year,
             student_data(name, mobile, university_name,admission_type,pattern,program_name,course_name, year,registration_no)
@@ -115,7 +115,7 @@ st.markdown(f"""
 **Payment Date:** {receipt['payment_date']}  
 **Mode:** {receipt['payment_mode']}  
 **Manual Bill No:** {receipt['manual_bill_no']}  
-
+**Reference No:** {receipt['reference_number']} 
 **Remarks:** {receipt['remarks']}
 """)
 
