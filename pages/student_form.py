@@ -134,7 +134,8 @@ if profile["role_code"] in [2, 3]:
             mother_tongue = st.text_input("Mother Tongue")
         with formcol2:
             gender = st.selectbox("Gender", ["Male","Female","Other"])
-            Dob = st.date_input("Date of Birth", value=date(1985,1,1))
+            Dob = st.date_input("Date of Birth", value=date(2000, 1, 1), min_value=date(1950, 1, 1),
+            max_value=date.today())
             religion = st.selectbox("Religion",["HINDU","CHRISTIAN","ISLAM","Other"])
             community = st.selectbox("Community", ["BC","MBC","SC","ST","FC","Other"])
             caste = st.text_input("Caste")
@@ -164,6 +165,13 @@ if profile["role_code"] in [2, 3]:
             reference_mobile = st.text_input("Reference Centre/Person Mobile Number", max_chars=10)
 
 
+        st.divider()
+        appcol1,appcol2 = st.columns(2)
+        with appcol1:
+            appln_num = st.text_input("Application No")
+        with appcol2:
+            regn_num = st.text_input("Registration No")
+        
         submitted = st.form_submit_button("Submit")
 
         if submitted:
@@ -255,8 +263,8 @@ if profile["role_code"] in [2, 3]:
                 "deb_id": deb_id,
                 "abc_id": abc_id,
                 "part1_subject": part1lang,
-                "registration_no": None,
-                "application_no": None,
+                "registration_no": regn_num,
+                "application_no": appln_num,
                 "app_status": "pending",
                 "appln_date": applndate.isoformat(),
                 "entry_date": datetime.now().isoformat(),

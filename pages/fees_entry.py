@@ -126,13 +126,13 @@ elif st.session_state.page == "payment":
     st.subheader("💰 Select Fees")
 
     fee_types = [
-        "APPLICATION FEES", "AREAR FEES", "ASSIGNMENT FEES", "BOOK FEES",
+        "APPLICATION FEES", "AREAR FEES", "ASSIGNMENT FEES","BONAFIED CERTIFICATE FEES", "BOOK FEES",
         "CHANGE OF CENTRE FEES", "CONCESSION FEES", "CONSOLIDATE MARKSHEET FEES",
-        "COURSE FEES", "COURSE FEES PENALTY", "DEGREE FEES",
+        "COURSE FEES", "COURSE FEES PENALTY","COURSE COMPLETION CERT FEES", "DEGREE FEES",
         "ELIGIBILITY CERTIFICATE FEES", "EXAM CENTER FEES", "EXAM FEES",
-        "EXAM FEES PENALTY", "EXAM WRITING FEES", "PENALTY",
-        "PROVISIONAL FEES", "PSTM CERTIFICATE FEES",
-        "REVALUATION FEES", "TC FEES", "OTHER FEES"
+        "EXAM FEES PENALTY", "EXAM WRITING FEES", "ID CARD FEES","PENALTY",
+        "PROVISIONAL FEES", "PRACTICAL FEES", "PSTM CERTIFICATE FEES",
+        "REVALUATION FEES","RE-DO ORDER FEEES", "TC FEES", "OTHER FEES"
     ]
 
     st.markdown("### 🔼 Fee Selection")
@@ -198,9 +198,14 @@ elif st.session_state.page == "payment":
     with col4:
         payment_mode = st.selectbox(
             "Payment Mode",
-            ["Cash", "UPI", "NetBanking"],
+            ["Cash","QR CODE SCAN", "UPI", "NetBanking"],
             key=f"mode_{st.session_state.reset_flag}"
         )
+        if payment_mode in ["QR CODE SCAN", "UPI", "NetBanking"]:
+            ref_num = st.text_input("Reference Number", key=f"ref_{st.session_state.reset_flag}"
+            )
+        else:
+            ref_num = None 
 
     # ======================
     # LATE PAYMENT
@@ -249,7 +254,8 @@ elif st.session_state.page == "payment":
             "fine_amount": fine_amount,
             "remarks": remarks,
             "total_amount": final_total,
-            "payment_mode": payment_mode
+            "payment_mode": payment_mode,
+            "reference_number": ref_num
         }).execute()
 
         session_id = session.data[0]["id"]
