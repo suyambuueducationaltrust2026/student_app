@@ -33,10 +33,15 @@ query = supabase.table("payment_session") \
 if search:
     search_pattern = f"*{search}*"
 
-    # Wrap OR conditions in parentheses
-    or_filter = f"(receipt_no.ilike.{search_pattern},student_data.name.ilike.{search_pattern},student_data.mobile.ilike.{search_pattern},student_data.course_name.ilike.{search_pattern})"
+    # Single string with comma-separated conditions, no extra parentheses
+    or_filter = (
+        f"receipt_no.ilike.{search_pattern},"
+        f"student_data.name.ilike.{search_pattern},"
+        f"student_data.mobile.ilike.{search_pattern},"
+        f"student_data.course_name.ilike.{search_pattern}"
+    )
 
-    query = query.or_(or_filter)
+    query = query.or_(or_filter)  # postgrest-py will handle the parentheses internally
 
 res = query.order("id", desc=True).limit(50).execute()
 data = res.data
