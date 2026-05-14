@@ -33,13 +33,10 @@ query = supabase.table("payment_session") \
 if search:
     search_pattern = f"*{search}*"
 
-    query = query.or_(
-        f"receipt_no.ilike.{search_pattern},"
-        f"student_data.name.ilike.{search_pattern},"
-        f"student_data.mobile.ilike.{search_pattern},"
-        f"student_data.course_name.ilike.{search_pattern}"
-    )
+    # Wrap OR conditions in parentheses
+    or_filter = f"(receipt_no.ilike.{search_pattern},student_data.name.ilike.{search_pattern},student_data.mobile.ilike.{search_pattern},student_data.course_name.ilike.{search_pattern})"
 
+    query = query.or_(or_filter)
 
 res = query.order("id", desc=True).limit(50).execute()
 data = res.data
