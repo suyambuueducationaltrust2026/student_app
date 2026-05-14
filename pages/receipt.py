@@ -36,9 +36,9 @@ if search:
     # Single string with comma-separated conditions, no extra parentheses
     or_filter = (
         f"receipt_no.ilike.{search_pattern},"
-        f"student_data.name.ilike.{search_pattern},"
-        f"student_data.mobile.ilike.{search_pattern},"
-        f"student_data.course_name.ilike.{search_pattern}"
+        f"yearfees_master.student_data.name.ilike.{search_pattern},"
+        f"yearfees_master.student_data.mobile.ilike.{search_pattern},"
+        f"yearfees_master.student_data.course_name.ilike.{search_pattern}"
     )
 
     query = query.or_(or_filter)  # postgrest-py will handle the parentheses internally
