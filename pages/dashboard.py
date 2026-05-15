@@ -29,7 +29,23 @@ if profile["role_code"] in [1,2,3]:
 
 if profile["role_code"] in [1,2]:
 
-    st.title("👤 ALL TABLE VIEW")
+    st.title("ALL RECEIPT TABLE VIEW")
+
+    response2 = supabase.table("full_fee_payment_view").select("*").execute()
+
+# Convert to DataFrame
+    df2 = pd.DataFrame(response2.data)
+
+# Display in Streamlit
+    st.dataframe(df2)    
+
+
+
+#ALL TABLE VIEW
+
+if profile["role_code"] in [1,2]:
+
+    st.header("ALL FEES TABLE VIEW")
 
     response3 = supabase.table("all_table_view").select("*").execute()
 
