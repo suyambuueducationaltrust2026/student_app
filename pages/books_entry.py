@@ -34,7 +34,7 @@ if not data:
 # ======================
 # FILTER DROPDOWNS
 # ======================
-col1, col2, col3, col4, col5 = st.columns(5)
+col1, col2, col3, col4, col5, col6 = st.columns(6)
 
 with col1:
     selected_univ = st.selectbox(
@@ -65,6 +65,11 @@ with col5:
         "Year",
         ["All"] + sorted({r["year"] for r in data})
     )
+with col6:
+    selected_fees_type = st.selectbox(
+        "Type of Fees",
+        ["All"] + sorted({r["fee_type"] for r in data})
+    )
 
 # ======================
 # FILTER DATA BASED ON SELECTIONS
@@ -76,6 +81,7 @@ filtered_students = [
     and (selected_program == "All" or r["program_name"] == selected_program)
     and (selected_course == "All" or r["course_name"] == selected_course)
     and (selected_year == "All" or r["year"] == selected_year)
+    and (selected_fees_type == "All" or r["fee_type"] == selected_fees_type)
 ]
 
 # ======================
@@ -86,8 +92,19 @@ if filtered_students:
     
     # Optional: Only show relevant columns
     columns_to_show = [
-        "name", "university_name", "pattern", "program_name", 
-        "course_name", "year", "total_fee", "paid_amount", "balance"
+    # Student info
+    "name", "mobile", "whatsapp", "admission_type",
+    "registration_no", "reference_centre", "ref_centre_mobile",
+
+    # Academic info
+    "year", "university_name", "program_name", "course_name",
+
+    # Fee structure
+    "yf_id", "student_id", "batch_year", "fees_course_year",
+    "due_date", "paid_amount",
+
+    # Payment info
+    "receipt_no", "fee_type", "amount"
     ]
     st.dataframe(df[columns_to_show], use_container_width=True)
     
