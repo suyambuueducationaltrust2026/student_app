@@ -93,15 +93,15 @@ if filtered_students:
     # Optional: Only show relevant columns
     columns_to_show = [
     # Student info
-    "name", "mobile", "whatsapp", "admission_type",
+    "name", "mobile", "admission_type",
     "registration_no", "reference_centre", "ref_centre_mobile",
 
     # Academic info
     "year", "university_name", "program_name", "course_name",
 
     # Fee structure
-    "yf_id", "student_id", "batch_year", "fees_course_year",
-    "due_date", "paid_amount",
+    "batch_year", "fees_course_year",
+    "due_date", "paid_amount", "payment_date","payment_mode",
 
     # Payment info
     "receipt_no", "fee_type", "amount"
