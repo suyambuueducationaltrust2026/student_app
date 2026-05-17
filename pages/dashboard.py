@@ -42,11 +42,11 @@ col1, col2 = st.columns(2)
 
 with col1:
     years = sorted(df["year"].dropna().unique())
-    selected_years = st.multiselect("Select Years", years, default=years)
+    selected_years = st.multiselect("Select Years", years, default=[2026])
 
 with col2:
     programs = sorted(df["program_name"].dropna().unique())
-    selected_program = st.selectbox("Select Program", programs)
+    selected_program = st.selectbox("Select Program", programs,index=programs.index("UG"))
 
 # -------------------------
 # Filter Data
@@ -60,21 +60,21 @@ filtered_df = df[
 # Chart 1: Students per Program
 # =========================
 program_students = (
-    filtered_df.groupby("program_name")["s_no"]
+    filtered_df.groupby("course_name")["s_no"]
     .nunique()
     .reset_index(name="No_of_Students")
 )
 
-st.subheader(f"Student Count by Program")
+st.subheader(f"Student Count by Course")
 st.dataframe(program_students)
 
 fig1 = px.bar(
     program_students,
-    x="program_name",
+    x="course_name",
     y="No_of_Students",
-    color="program_name",
+    color="course_name",
     text="No_of_Students",
-    title="Students per Program"
+    title="Students per course"
 )
 
 st.plotly_chart(fig1, use_container_width=True)
