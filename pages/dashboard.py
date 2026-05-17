@@ -32,7 +32,7 @@ if profile["role_code"] in [1,2,3]:
 
 df = df1.copy()
 df.columns = df.columns.str.strip().str.lower()
-
+df["reference_centre"] = df["reference_centre"].fillna("Not Assigned")
 st.title("Student Admission Details")
 
 # -------------------------
@@ -48,14 +48,14 @@ with col2:
     programs = sorted(df["program_name"].dropna().unique())
     selected_program = st.selectbox("Select Program", programs,index=programs.index("UG"))
 with col3:
-    centre = sorted(df["centre_name"].unique())
+    centre = sorted(df["reference_centre"].unique())
     selected_centre = st.multiselect("Selected Centres", centre, default=centre)
 # -------------------------
 # Filter Data
 # -------------------------
 filtered_df = df[
     (df["year"].isin(selected_years)) &
-    (df["program_name"] == selected_program) & (df["centre_name"] == selected_centre)
+    (df["program_name"] == selected_program) & (df["reference_centre"] == selected_centre)
 ]
 
 # =========================
