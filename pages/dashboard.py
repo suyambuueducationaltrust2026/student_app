@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
+import plotly.express as px
 from datetime import date, datetime
 from utils import supabase, get_universities, get_programs, get_courses
 
@@ -25,6 +26,60 @@ if profile["role_code"] in [1,2,3]:
 
 # Display in Streamlit
     st.dataframe(df1)    
+
+#chart
+
+
+df = df1.copy()
+df.columns = df.columns.str.strip().str.lower()
+
+st.title("Student Admission Details")
+
+# -------------------------
+# Year and Program Filters
+# -------------------------
+col1, col2 = st.columns(2)
+
+with col1:
+    years = sorted(df["year"].dropna().unique())
+    selected_years = st.multiselect("Select Years", years, default=years)
+
+with col2:
+    programs = sorted(df["program_name"].dropna().unique())
+    selected_program = st.selectbox("Select Program", programs)
+
+# -------------------------
+# Filter Data
+# -------------------------
+filtered_df = df[
+    (df["year"].isin(selected_years)) &
+    (df["program_name"] == selected_program)
+]
+
+# =========================
+# Chart 1: Students per Program
+# =========================
+program_students = (
+    filtered_df.groupby("program_name")["s_id"]
+    .nunique()
+    .reset_index(name="No_of_Students")
+)
+
+st.subheader(f"Student Count by Program")
+st.dataframe(program_students)
+
+fig1 = px.bar(
+    program_students,
+    x="program_name",
+    y="No_of_Students",
+    color="program_name",
+    text="No_of_Students",
+    title="Students per Program"
+)
+
+st.plotly_chart(fig1, use_container_width=True)
+
+
 #FEES DASHBOARD
 
 if profile["role_code"] in [1,2]:
@@ -41,16 +96,4 @@ if profile["role_code"] in [1,2]:
 
 
 
-#ALL TABLE VIEW
-
-if profile["role_code"] in [1,2]:
-
-    st.header("ALL FEES TABLE VIEW")
-
-    response3 = supabase.table("all_table_view").select("*").execute()
-
-# Convert to DataFrame
-    df3 = pd.DataFrame(response3.data)
-
-# Display in Streamlit
-    st.dataframe(df3)    
+  
