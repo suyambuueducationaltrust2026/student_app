@@ -125,8 +125,8 @@ else:
 #dashboard
 
 df = pd.DataFrame(filtered_students)
-df.columns = df.columns.str.strip().str.lower()
 
+df.columns = df.columns.astype(str).str.strip().str.lower()
 st.title("Course-wise Student Dashboard")
 
 # Year Filter
