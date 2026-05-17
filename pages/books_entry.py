@@ -123,52 +123,43 @@ else:
     st.info("No students found with the selected filters.")
 
 #dashboard
-df=pd.DataFrame(data)
+
+df = pd.DataFrame(data)
 df.columns = df.columns.str.strip().str.lower()
 
 st.title("Course-wise Student Dashboard")
 
 # Year Filter
 years = sorted(df["year"].dropna().unique())
+selected_years = st.multiselect("Select Years", years, default=years)
 
-selected_years = st.multiselect(
-    "Select Years",
-    years,
-    default=years
-)
-programs = df["program_name"].unique()
+# Program Filter
+programs = sorted(df["program_name"].dropna().unique())
+selected_program = st.selectbox("Program", programs)
 
-selected_program = st.selectbox(
-    "Program",
-    programs
-)
-# Filter
-filtered_df = df[df["year"] == selected_year]
+# Filter Data
+filtered_df = df[df["year"].isin(selected_years)]
+filtered_df = filtered_df[filtered_df["program_name"] == selected_program]
 
-# Student Count
+# Group by course
 course_students = (
     filtered_df.groupby("course_name")["student_id"]
     .nunique()
-    .reset_index()
+    .reset_index(name="No_of_Students")
 )
 
-course_students.columns = [
-    "Course",
-    "No_of_Students"
-]
-
 # Display
-st.subheader(f"Students Count - {selected_year}")
-
+st.subheader(f"Students Count | Program: {selected_program}")
 st.dataframe(course_students)
 
-# Chart
+# Bar chart
 fig = px.bar(
     course_students,
-    x="Course",
+    x="course_name",
     y="No_of_Students",
-    color="Course",
-    text="No_of_Students"
+    color="course_name",
+    text="No_of_Students",
+    title="Students per Course"
 )
 
 st.plotly_chart(fig, use_container_width=True)
