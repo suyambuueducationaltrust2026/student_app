@@ -38,7 +38,7 @@ st.title("Student Admission Details")
 # -------------------------
 # Year and Program Filters
 # -------------------------
-col1, col2 = st.columns(2)
+col1, col2,col3 = st.columns(3)
 
 with col1:
     years = sorted(df["year"].dropna().unique())
@@ -47,13 +47,15 @@ with col1:
 with col2:
     programs = sorted(df["program_name"].dropna().unique())
     selected_program = st.selectbox("Select Program", programs,index=programs.index("UG"))
-
+with col3:
+    centre = sorted(df["centre_name"].unique())
+    selected_centre = st.multiselect("Selected Centres", centre, default=centre)
 # -------------------------
 # Filter Data
 # -------------------------
 filtered_df = df[
     (df["year"].isin(selected_years)) &
-    (df["program_name"] == selected_program)
+    (df["program_name"] == selected_program) & (df["centre_name"] == selected_centre)
 ]
 
 # =========================
