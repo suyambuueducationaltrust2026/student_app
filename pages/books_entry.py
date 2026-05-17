@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
+import plotly.express as px
 from datetime import date, datetime
 from utils import supabase, get_universities, get_programs, get_courses
 
@@ -120,3 +121,54 @@ if filtered_students:
     )
 else:
     st.info("No students found with the selected filters.")
+
+#dashboard
+df=pd.DataFrame(data)
+df.columns = df.columns.str.strip().str.lower()
+
+st.title("Course-wise Student Dashboard")
+
+# Year Filter
+years = sorted(df["year"].dropna().unique())
+
+selected_years = st.multiselect(
+    "Select Years",
+    years,
+    default=years
+)
+programs = df["program_name"].unique()
+
+selected_program = st.selectbox(
+    "Program",
+    programs
+)
+# Filter
+filtered_df = df[df["year"] == selected_year]
+
+# Student Count
+course_students = (
+    filtered_df.groupby("course_name")["student_id"]
+    .nunique()
+    .reset_index()
+)
+
+course_students.columns = [
+    "Course",
+    "No_of_Students"
+]
+
+# Display
+st.subheader(f"Students Count - {selected_year}")
+
+st.dataframe(course_students)
+
+# Chart
+fig = px.bar(
+    course_students,
+    x="Course",
+    y="No_of_Students",
+    color="Course",
+    text="No_of_Students"
+)
+
+st.plotly_chart(fig, use_container_width=True)
