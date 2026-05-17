@@ -55,7 +55,7 @@ with col3:
 # -------------------------
 filtered_df = df[
     (df["year"].isin(selected_years)) &
-    (df["program_name"] == selected_program) & (df["reference_centre"] == selected_centre)
+    (df["program_name"] == selected_program) & (df["reference_centre"].isin(selected_centre))
 ]
 
 # =========================
