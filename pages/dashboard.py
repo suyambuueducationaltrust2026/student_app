@@ -42,7 +42,7 @@ col1, col2 = st.columns(2)
 
 with col1:
     years = sorted(df["year"].dropna().unique())
-    selected_years = st.multiselect("Select Years", years, default=[2026])
+    selected_years = st.multiselect("Select Years", years, default=years)
 
 with col2:
     programs = sorted(df["program_name"].dropna().unique())
