@@ -163,7 +163,7 @@ try:
                     .reset_index(name="No_of_Students")
                 )
                 total_students = course_students["No_of_Students"].sum()
-                
+                st.header(f"Details of students paid: {selected_fees_type}")
                 st.subheader(f"Students Count: {total_students}")
                 st.dataframe(course_students)
                 
