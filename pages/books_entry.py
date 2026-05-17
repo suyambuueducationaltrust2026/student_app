@@ -131,6 +131,7 @@ st.title("Course-wise Student Dashboard")
 
 # Year Filter
 courseyears = sorted(df["fees_course_year"].dropna().unique())
+default_years = [courseyears[0]] if courseyears else []
 selected_years = st.multiselect("Select Years/Semester", courseyears, default=courseyears)
 
 # Program Filter
