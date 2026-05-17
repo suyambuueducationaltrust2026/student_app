@@ -64,7 +64,10 @@ program_students = (
     .nunique()
     .reset_index(name="No_of_Students")
 )
+total_students = program_students["No_of_Students"].sum()
 
+# Display the total
+st.write(f"**Total Students in this selected program:** {total_students}")
 st.subheader(f"Student Count by Course")
 st.dataframe(program_students)
 
