@@ -94,7 +94,7 @@ if filtered_students:
     # Optional: Only show relevant columns
     columns_to_show = [
     # Student info
-    "name", "mobile", "admission_type",
+    "name", "mobile", "admission_type","pattern",
     "registration_no", "reference_centre", "ref_centre_mobile",
 
     # Academic info
@@ -124,22 +124,22 @@ else:
 
 #dashboard
 
-df = pd.DataFrame(data)
+df = pd.DataFrame(filtered_students)
 df.columns = df.columns.str.strip().str.lower()
 
 st.title("Course-wise Student Dashboard")
 
 # Year Filter
-years = sorted(df["year"].dropna().unique())
-selected_years = st.multiselect("Select Years", years, default=years)
+courseyears = sorted(df["fees_course_year"].dropna().unique())
+selected_years = st.multiselect("Select Years/Semester", courseyears, default=courseyears)
 
 # Program Filter
-programs = sorted(df["program_name"].dropna().unique())
-selected_program = st.selectbox("Program", programs)
+#programs = sorted(df["program_name"].dropna().unique())
+#selected_program = st.selectbox("Program", programs)
 
 # Filter Data
-filtered_df = df[df["year"].isin(selected_years)]
-filtered_df = filtered_df[filtered_df["program_name"] == selected_program]
+filtered_df = df[df["fees_course_year"].isin(selected_years)]
+#filtered_df = filtered_df[filtered_df["program_name"] == selected_program]
 
 # Group by course
 course_students = (
@@ -147,9 +147,9 @@ course_students = (
     .nunique()
     .reset_index(name="No_of_Students")
 )
-
+total_students = course_students["No_of_Students"].sum()
 # Display
-st.subheader(f"Students Count | Program: {selected_program}")
+st.subheader(f"Students Count: {total_students}")
 st.dataframe(course_students)
 
 # Bar chart
