@@ -60,7 +60,7 @@ filtered_df = df[
 # Chart 1: Students per Program
 # =========================
 program_students = (
-    filtered_df.groupby("program_name")["s_id"]
+    filtered_df.groupby("program_name")["s_no"]
     .nunique()
     .reset_index(name="No_of_Students")
 )
