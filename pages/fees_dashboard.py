@@ -25,12 +25,132 @@ st.header("📊 All Fees Dashboard")
 # ======================
 # FETCH DATA FROM VIEW
 # ======================
-response = supabase.table("all_table_view").select("*").execute()
-data = response.data  # List of dictionaries
+def fetch_all_rows(table, order_col="receipt_no"):
+    # Supabase returns at most 1000 rows per request, so page through the table/view
+    rows, start, page_size = [], 0, 1000
+    while True:
+        batch = (
+            supabase.table(table)
+            .select("*")
+            .order(order_col)
+            .range(start, start + page_size - 1)
+            .execute()
+            .data
+        )
+        rows.extend(batch)
+        if len(batch) < page_size:
+            break
+        start += page_size
+    return rows
+
+data = fetch_all_rows("all_table_view")  # List of dictionaries
 
 if not data:
     st.info("No data found in the table/view.")
     st.stop()
+
+# ======================
+# FEES KPI DASHBOARD (selected year)
+# ======================
+st.subheader("💰 Fees KPI Dashboard")
+
+students_df = pd.DataFrame(fetch_all_rows("student_data", "s_no"))
+students_df["year"] = students_df["year"].fillna("Not Set").astype(str)
+students_df["program_name"] = students_df["program_name"].fillna("Not Set")
+
+kpi_df = pd.DataFrame(data)
+kpi_df["year"] = kpi_df["year"].fillna("Not Set").astype(str)
+kpi_df["fee_type"] = kpi_df["fee_type"].fillna("").astype(str).str.upper()
+kpi_df["program_name"] = kpi_df["program_name"].fillna("Not Set")
+kpi_df["course_year"] = pd.to_numeric(kpi_df["fees_course_year"], errors="coerce")
+
+kpi_years = sorted(set(students_df["year"]) | set(kpi_df["year"]))
+kpi_year = st.selectbox(
+    "Select Year for Fees KPIs", kpi_years, index=len(kpi_years) - 1, key="fees_kpi_year"
+)
+yr = kpi_df[kpi_df["year"] == kpi_year]
+year_students = students_df[students_df["year"] == kpi_year]
+
+def student_count(frame):
+    return int(frame["student_id"].nunique())
+
+st.metric("Total Students Registered", int(year_students["s_no"].nunique()))
+
+st.markdown("### Fees paid by program and year (number of students)")
+
+YEAR_LABELS = {1: "First Year", 2: "Second Year", 3: "Third Year"}
+
+for prog in sorted(year_students["program_name"].unique()):
+    registered = int(year_students.loc[year_students["program_name"] == prog, "s_no"].nunique())
+    st.markdown(f"#### {prog}")
+    st.caption(f"Registered in {kpi_year}: {registered}")
+
+    prog_yr = yr[yr["program_name"] == prog]
+    year_cols = st.columns(3)
+    for i, n in enumerate([1, 2, 3]):
+        year_rows = prog_yr[prog_yr["course_year"] == n]
+        with year_cols[i]:
+            st.markdown(f"**{YEAR_LABELS[n]}**")
+            st.metric("Course Fees Paid", student_count(year_rows[year_rows["fee_type"] == "COURSE FEES"]))
+            st.metric("Exam Fees Paid", student_count(year_rows[year_rows["fee_type"].str.contains("EXAM")]))
+
+st.divider()
+
+# ======================
+# FEE STATUS BY PROGRAM (selected year)
+# Paid = student has a payment for the fee type
+# Not paid = enrolled in the year (student_data) with no payment for the fee type
+# ======================
+FEE_TYPES = [
+    "APPLICATION FEES", "AREAR FEES", "ASSIGNMENT FEES", "BONAFIED CERTIFICATE FEES", "BOOK FEES",
+    "CHANGE OF CENTRE FEES", "CONCESSION FEES", "CONSOLIDATE MARKSHEET FEES",
+    "COURSE FEES", "COURSE FEES PENALTY", "COURSE COMPLETION CERT FEES", "DEGREE FEES",
+    "ELIGIBILITY CERTIFICATE FEES", "EXAM CENTER FEES", "EXAM FEES",
+    "EXAM FEES PENALTY", "EXAM WRITING FEES", "ID CARD FEES", "PENALTY",
+    "PROVISIONAL FEES", "PRACTICAL FEES", "PSTM CERTIFICATE FEES",
+    "REVALUATION FEES", "RE-DO ORDER FEEES", "TC FEES", "OTHER FEES",
+]
+
+st.subheader(f"🧾 Fee Status by Program — {kpi_year}")
+
+fee_type_choice = st.selectbox("Select Fee Type", FEE_TYPES, key="fee_status_type")
+
+def paid_ids_for(fee_type):
+    return set(yr.loc[yr["fee_type"] == fee_type, "student_id"])
+
+def split_students(fee_type, program):
+    prog_students = year_students[year_students["program_name"] == program]
+    paid_mask = prog_students["s_no"].isin(paid_ids_for(fee_type))
+    return prog_students[paid_mask], prog_students[~paid_mask]
+
+header = st.columns([3, 2, 2])
+header[0].markdown("**Program**")
+header[1].markdown("**Paid** (click number)")
+header[2].markdown("**Not paid** (click number)")
+
+for prog in sorted(year_students["program_name"].unique()):
+    paid_list, not_list = split_students(fee_type_choice, prog)
+    row = st.columns([3, 2, 2])
+    row[0].write(prog)
+    if row[1].button(str(len(paid_list)), key=f"paid_{fee_type_choice}_{prog}"):
+        st.session_state.fee_list_sel = ("Paid", fee_type_choice, prog)
+    if row[2].button(str(len(not_list)), key=f"notpaid_{fee_type_choice}_{prog}"):
+        st.session_state.fee_list_sel = ("Not paid", fee_type_choice, prog)
+
+sel = st.session_state.get("fee_list_sel")
+if sel:
+    status, sel_fee, sel_prog = sel
+    paid_list, not_list = split_students(sel_fee, sel_prog)
+    shown = paid_list if status == "Paid" else not_list
+    st.markdown(f"**{status} — {sel_fee} — {sel_prog}** ({len(shown)} students)")
+    st.dataframe(
+        shown[["name", "mobile", "program_name", "course_name"]].rename(columns={
+            "name": "Name", "mobile": "Mobile", "program_name": "Program", "course_name": "Course",
+        }),
+        hide_index=True,
+    )
+
+st.divider()
 
 # ======================
 # FILTER DROPDOWNS
