@@ -227,7 +227,7 @@ if filtered_students:
     # Payment info
     "receipt_no", "fee_type", "amount"
     ]
-    st.dataframe(df[columns_to_show], use_container_width=True)
+    st.dataframe(df[columns_to_show], width="stretch")
     
     # ======================
     # DOWNLOAD BUTTON
@@ -296,7 +296,7 @@ try:
                     text="No_of_Students",
                     title="Students per Course"
                 )
-                st.plotly_chart(fig, use_container_width=True)
+                st.plotly_chart(fig, width="stretch")
             else:
                 st.info("No student_id column found — cannot calculate course-wise counts.")
 
