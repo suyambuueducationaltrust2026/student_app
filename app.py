@@ -68,17 +68,21 @@ def auth_screen():
 
     elif option == "Login":
         if st.button("Login"):
+            if not email or not password:
+                st.error("Please enter both email and password.")
+                st.stop()
+
             user = sign_in(email, password)
             if user and user.user:
                 st.session_state.user = user.user  # store auth user
-            # Fetch profile from 'profiles' table
+                # Fetch profile from 'profiles' table
                 profile = get_profile(user.user.id)
-            if profile:
-                st.session_state.profile = profile
-                st.success(f"Welcome back, {profile['name']} ({profile['role']})!")
-            else:
-                st.error("Profile not found. Contact admin.")
-            st.rerun()
+                if profile:
+                    st.session_state.profile = profile
+                    st.success(f"Welcome back, {profile['name']} ({profile['role']})!")
+                else:
+                    st.error("Profile not found. Contact admin.")
+                st.rerun()
 # ------------------------------
 # Initialize session state
 # ------------------------------
