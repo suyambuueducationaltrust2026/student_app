@@ -1,5 +1,7 @@
-streamlit
+streamlit[pdf]
 supabase
 pandas
 reportlab
 plotly
+python-dotenv
+openpyxl

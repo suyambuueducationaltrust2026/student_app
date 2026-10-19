@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import date, datetime
 from utils import supabase
+from receipt_email import send_receipt_dialog
 
 # ======================
 # SESSION INIT
@@ -33,17 +34,27 @@ if st.session_state.page == "search":
 
     st.title("🔍 Student Search")
 
-    search = st.text_input("Search by Name / Mobile / Aadhaar")
+    search = st.text_input(
+        "Search by Name / Mobile / Aadhaar / Course / Program / University / Year / Registration No"
+    )
 
     students = []
 
-    if search:
+    # Commas and brackets would break the search filter, so strip them
+    search_clean = search.strip().replace(",", " ").replace("(", " ").replace(")", " ")
+
+    if search_clean:
         res = supabase.table("student_data") \
             .select("*") \
-            .or_(f"name.ilike.%{search}%,mobile.ilike.%{search}%,aadhaar.ilike.%{search}%") \
+            .or_(",".join(
+                f"{field}.ilike.%{search_clean}%"
+                for field in ["name", "mobile", "aadhaar", "course_name",
+                              "program_name", "university_name", "year", "registration_no"]
+            )) \
+            .limit(100) \
             .execute()
 
-        students = res.data
+        students = res.data or []
 
     if not students:
         st.info("Search student first")
@@ -281,6 +292,21 @@ elif st.session_state.page == "payment":
         }).eq("id", yearfees["id"]).execute()
 
         st.success(f"Payment Saved! Receipt No: {receipt_no}")
+
+        # Ask whether to email this receipt
+        send_receipt_dialog({
+            "receipt": {
+                "receipt_no": receipt_no,
+                "payment_date": str(payment_date),
+                "payment_mode": payment_mode,
+                "reference_number": ref_num,
+                "total_amount": final_total,
+                "remarks": remarks,
+                "yearfees_master": {"course_year": course_year},
+            },
+            "student": student,
+            "fees": [{"fee_type": f, "amount": a} for f, a in selected_fees.items()],
+        })
 
     # ======================
     # NAVIGATION BUTTONS

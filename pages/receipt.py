@@ -28,27 +28,48 @@ query = supabase.table("payment_session").select("""
         course_year,
         student_data(name, mobile, university_name, admission_type, pattern, program_name, course_name, year, registration_no)
     )
-""").order("id", desc=True).limit(50)
+""").order("id", desc=True)
+
+# ======================
+# DATABASE SEARCH (all receipts, not just the latest 50)
+# ======================
+term = search.strip().replace(",", " ").replace("(", " ").replace(")", " ")
+
+if term:
+    # 1. Students matching name / mobile / course
+    student_res = supabase.table("student_data") \
+        .select("s_no") \
+        .or_(f"name.ilike.%{term}%,mobile.ilike.%{term}%,course_name.ilike.%{term}%") \
+        .execute()
+    student_ids = [s["s_no"] for s in student_res.data or []]
+
+    # 2. Their fee records (yearfees_master)
+    yearfees_ids = []
+    if student_ids:
+        yearfees_res = supabase.table("yearfees_master") \
+            .select("id") \
+            .in_("student_id", student_ids) \
+            .execute()
+        yearfees_ids = [y["id"] for y in yearfees_res.data or []]
+
+    # 3. Receipts for those fee records, or a matching receipt number
+    conditions = []
+    if yearfees_ids:
+        ids_text = ",".join(str(i) for i in yearfees_ids)
+        conditions.append(f"yearfees_master_id.in.({ids_text})")
+    if term.isdigit():
+        conditions.append(f"receipt_no.eq.{term}")
+
+    if not conditions:
+        st.info("No receipts found")
+        st.stop()
+
+    query = query.or_(",".join(conditions)).limit(200)
+else:
+    query = query.limit(50)
 
 res = query.execute()
 data = res.data or []
-
-# ======================
-# PYTHON-SIDE FILTERING
-# ======================
-if search:
-    search_lower = search.lower()
-    filtered = []
-    for r in data:
-        student = r["yearfees_master"]["student_data"]
-        if (
-            search_lower in str(r.get("receipt_no", "")).lower()
-            or search_lower in student.get("name", "").lower()
-            or search_lower in student.get("mobile", "").lower()
-            or search_lower in student.get("course_name", "").lower()
-        ):
-            filtered.append(r)
-    data = filtered
 
 if not data:
     st.info("No receipts found")
